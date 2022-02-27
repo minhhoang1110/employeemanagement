@@ -16,6 +16,8 @@ type Employee struct {
 	Department   Department       `json:"department" valid:"-"`
 	RoleID       types.UUIDBase64 `json:"role_id" form:"-" gorm:"type:uuid;index"`
 	Role         Role             `json:"role" valid:"-"`
+	Email        string           `json:"email"`
+	Password     string           `json:"password"`
 }
 
 type Gender int
@@ -23,6 +25,7 @@ type Gender int
 const (
 	GenderMale Gender = iota
 	GenderFeMale
+	GenderOther
 )
 
 var GenderToString = map[Gender]string{

@@ -9,3 +9,6 @@ createdb:
 
 dropdb:
 	docker exec -it postgres12alpine dropdb quanlynhanvien
+
+run:
+	go run main.go

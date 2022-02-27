@@ -3,6 +3,7 @@ module github.com/minhhoang1110/employeemanagement
 go 1.17
 
 require (
+	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
 	gorm.io/driver/postgres v1.3.1
