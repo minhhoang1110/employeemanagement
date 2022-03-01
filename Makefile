@@ -4,6 +4,9 @@ postgres:
 start:
 	docker start postgres12alpine
 
+stop:
+	docker stop postgres12alpine
+	
 createdb:
 	docker exec -it postgres12alpine createdb --username=root --owner=root quanlynhanvien
 

@@ -11,27 +11,23 @@ import (
 	"github.com/minhhoang1110/employeemanagement/types"
 )
 
-type Employee struct{}
+type Department struct{}
 
-var employeeO Employee
+var departmentO Department
 
-func EmployeeInstance() *Employee {
-	return &employeeO
+func DepartmentInstance() *Department {
+	return &departmentO
 }
 
-func (e *Employee) CreateEmployee(writer http.ResponseWriter, request *http.Request) {
-	var newEmployee models.Employee
+func (d *Department) CreateDepartment(writer http.ResponseWriter, request *http.Request) {
+	var newDepartment models.Department
 	var respone types.Respone
-	if err := json.NewDecoder(request.Body).Decode(&newEmployee); err != nil {
+	if err := json.NewDecoder(request.Body).Decode(&newDepartment); err != nil {
 		respone.ResponseWithJson(writer, http.StatusBadRequest, map[string]string{"message": "Invalid body"}, "error")
 		return
 	}
-	if e.IsEmptyData(newEmployee) {
+	if d.IsEmptyData(newDepartment) {
 		respone.ResponseWithJson(writer, http.StatusBadRequest, map[string]string{"message": "Data can not empty"}, "error")
-		return
-	}
-	if !govalidator.IsEmail(newEmployee.Email) {
-		respone.ResponseWithJson(writer, http.StatusBadRequest, map[string]string{"message": "Email is invalid"}, "error")
 		return
 	}
 	db, err := database.GetConnect()
@@ -39,16 +35,16 @@ func (e *Employee) CreateEmployee(writer http.ResponseWriter, request *http.Requ
 		respone.ResponseWithJson(writer, http.StatusInternalServerError, map[string]string{"message": "Connect error"}, "error")
 		return
 	}
-	result := db.Create(&newEmployee)
+	result := db.Create(&newDepartment)
 	if result.Error != nil {
 		respone.ResponseWithJson(writer, http.StatusBadRequest, map[string]string{"message": result.Error.Error()}, "error")
 		return
 	}
-	respone.ResponseWithJson(writer, http.StatusOK, newEmployee, "employee")
+	respone.ResponseWithJson(writer, http.StatusOK, newDepartment, "employee")
 }
 
-func (e *Employee) GetEmployeeObject(writer http.ResponseWriter, request *http.Request) {
-	var employee models.Employee
+func (d *Department) GetDepartmentObject(writer http.ResponseWriter, request *http.Request) {
+	var department models.Department
 	var respone types.Respone
 	params := mux.Vars(request)
 	var id string
@@ -62,34 +58,34 @@ func (e *Employee) GetEmployeeObject(writer http.ResponseWriter, request *http.R
 		respone.ResponseWithJson(writer, http.StatusInternalServerError, map[string]string{"message": "Connect error"}, "error")
 		return
 	}
-	result := db.Find(&employee, "id=?", id)
+	result := db.Find(&department, "id=?", id)
 	if result.Error != nil {
 		respone.ResponseWithJson(writer, http.StatusBadRequest, map[string]string{"message": result.Error.Error()}, "error")
 		return
 	}
-	if employee.ID == "" {
-		respone.ResponseWithJson(writer, http.StatusBadRequest, map[string]string{"message": "Employee does not exits"}, "error")
+	if department.ID == "" {
+		respone.ResponseWithJson(writer, http.StatusBadRequest, map[string]string{"message": "Department does not exits"}, "error")
 		return
 	}
-	respone.ResponseWithJson(writer, http.StatusOK, employee, "employee")
+	respone.ResponseWithJson(writer, http.StatusOK, department, "employee")
 }
 
-func (e *Employee) GetListEmployee(writer http.ResponseWriter, request *http.Request) {
-	var employees []models.Employee
+func (d *Department) GetListDepartment(writer http.ResponseWriter, request *http.Request) {
+	var departments []models.Department
 	var respone types.Respone
 	db, err := database.GetConnect()
 	if err != nil {
 		respone.ResponseWithJson(writer, http.StatusInternalServerError, map[string]string{"message": "Connect error"}, "error")
 		return
 	}
-	result := db.Find(&employees)
+	result := db.Find(&departments)
 	if result.Error != nil {
 		respone.ResponseWithJson(writer, http.StatusBadRequest, map[string]string{"message": result.Error.Error()}, "error")
 		return
 	}
-	respone.ResponseWithJson(writer, http.StatusOK, employees, "employee")
+	respone.ResponseWithJson(writer, http.StatusOK, departments, "employee")
 }
 
-func (e *Employee) IsEmptyData(employee models.Employee) bool {
-	return govalidator.IsNull(employee.FirstName) || govalidator.IsNull(employee.LastName) || govalidator.IsNull(employee.Address) || govalidator.IsNull(string(employee.Gender)) || govalidator.IsNull(employee.Phone)
+func (d *Department) IsEmptyData(department models.Department) bool {
+	return govalidator.IsNull(department.Name) || govalidator.IsNull(department.Phone) || govalidator.IsNull(department.Address)
 }
